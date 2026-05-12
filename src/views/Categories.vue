@@ -20,8 +20,6 @@ const add = async () => {
 </script>
 
 <template>
-  <Navbar />
-
   <div class="p-6">
     <h1 class="text-xl font-bold mb-3">Categories</h1>
 

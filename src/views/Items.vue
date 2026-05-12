@@ -14,51 +14,79 @@ const form = ref({
   price: "",
 });
 
-onMounted(() => {
-  store.fetch();
+onMounted(async () => {
+  await store.fetch();
 });
 
 const add = async () => {
-  await store.create(form.value);
+  try {
+    await store.create(form.value);
 
-  form.value.item_name = "";
-  form.value.price = "";
+    // reload items after adding
+    await store.fetch();
+
+    // clear form
+    form.value.item_name = "";
+    form.value.price = "";
+
+    alert("Item added successfully ✅");
+  } catch (err) {
+    console.log(err);
+    alert("Failed to add item ❌");
+  }
 };
 
+// filter items
 const filtered = computed(() => {
   return store.items.filter((i) =>
     i.item_name.toLowerCase().includes(search.value.toLowerCase()),
   );
 });
 
+// favorite feature
 const favorite = (item) => {
   let fav = JSON.parse(localStorage.getItem("fav") || "[]");
-  fav.push(item);
+
+  // avoid duplicates
+  const exists = fav.find((f) => f.id === item.id);
+  if (!exists) {
+    fav.push(item);
+  }
+
   localStorage.setItem("fav", JSON.stringify(fav));
+
+  alert("Added to favorites ❤️");
 };
 </script>
 
 <template>
-  <Navbar />
+  <div class="flex">
+    <div class="flex-1 p-6 bg-gray-100 min-h-screen">
+      <h1 class="text-2xl font-bold mb-5">Items Page</h1>
 
-  <div class="p-6">
-    <h1 class="text-xl font-bold mb-3">Items</h1>
+      <InputField v-model="search" placeholder="Search items..." />
 
-    <InputField v-model="search" placeholder="Search items..." />
+      <div class="bg-white p-4 rounded shadow mb-5">
+        <InputField v-model="form.item_name" placeholder="Item name" />
+        <InputField v-model="form.price" placeholder="Price" />
 
-    <InputField v-model="form.item_name" placeholder="Item name" />
-    <InputField v-model="form.price" placeholder="Price" />
+        <button
+          @click="add"
+          class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mt-2"
+        >
+          Add Item
+        </button>
+      </div>
 
-    <button @click="add" class="bg-green-500 text-white px-4 py-2 rounded mb-4">
-      Add Item
-    </button>
-
-    <ItemCard
-      v-for="i in filtered"
-      :key="i.id"
-      :item="i"
-      @delete="store.remove"
-      @fav="favorite"
-    />
+      <div class="grid gap-4">
+        <ItemCard
+          v-for="i in filtered"
+          :key="i.id"
+          :item="i"
+          @delete="store.remove"
+          @fav="favorite"
+        />
+      </div>
+    </div>
   </div>
 </template>

@@ -1,37 +1,37 @@
 import { defineStore } from "pinia";
-import api from "../services/api";
-import router from "../router";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: null,
-    token: localStorage.getItem("token") || "",
+    users: [],
   }),
 
   actions: {
-    async register(form) {
-      const res = await api.post("/register", form);
-
-      // optional: auto login after register
-      // OR just redirect
-      router.push("/login");
-
-      return res.data;
-    },
-
     async login(form) {
-      const res = await api.post("/login", form);
+      const foundUser = this.users.find(
+        (u) => u.email === form.email && u.password === form.password,
+      );
 
-      this.token = res.data.token;
-      localStorage.setItem("token", res.data.token);
-
-      router.push("/dashboard");
+      if (foundUser) {
+        this.user = foundUser;
+        alert("Login Success");
+      } else {
+        throw new Error("Invalid email or password");
+      }
     },
 
-    logout() {
-      this.token = "";
-      localStorage.removeItem("token");
-      router.push("/login");
+    async register(form) {
+      const exists = this.users.find((u) => u.email === form.email);
+
+      if (exists) {
+        throw new Error("Email already exists");
+      }
+
+      this.users.push(form);
+
+      localStorage.setItem("users", JSON.stringify(this.users));
+
+      alert("Register Success");
     },
   },
 });

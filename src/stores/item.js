@@ -14,12 +14,11 @@ export const useItemStore = defineStore("item", {
 
     async create(data) {
       await api.post("/items", data);
-      this.fetch();
     },
 
-    async delete(id) {
+    async remove(id) {
       await api.delete(`/items/${id}`);
-      this.fetch();
+      this.items = this.items.filter((i) => i.id !== id);
     },
   },
 });

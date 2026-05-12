@@ -7,9 +7,9 @@ import Categories from "../views/Categories.vue";
 import Items from "../views/Items.vue";
 
 const routes = [
-  { path: "/", redirect: "/login" },
-  { path: "/login", component: Login },
+  { path: "/", redirect: "/register" },
   { path: "/register", component: Register },
+  { path: "/login", component: Login },
   { path: "/dashboard", component: Dashboard },
   { path: "/categories", component: Categories },
   { path: "/items", component: Items },
