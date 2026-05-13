@@ -36,7 +36,6 @@ const addToFav = (item) => {
   alert("Added to favorites ❤️");
 };
 
-// FILTER
 const filtered = computed(() => {
   return store.items.filter((i) =>
     i.item_name.toLowerCase().includes(search.value.toLowerCase()),
