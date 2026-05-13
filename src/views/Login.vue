@@ -28,20 +28,20 @@ const login = async () => {
 <template>
   <div class="flex items-center justify-center h-screen">
     <div class="w-96 p-6 shadow rounded bg-white">
-      <h1 class="text-2xl font-bold mb-4">Login</h1>
+      <h1 class="text-2xl font-bold mb-5">Login</h1>
 
       <input
         v-model="form.email"
         type="email"
         placeholder="Email"
-        class="border w-full p-2 mb-3 rounded"
+        class="border w-full p-2 mb-3 rounded-lg"
       />
 
       <input
         v-model="form.password"
         type="password"
         placeholder="Password"
-        class="border w-full p-2 mb-3 rounded"
+        class="border w-full p-2 mb-3 rounded-lg"
       />
 
       <button @click="login" class="bg-green-500 text-white w-full p-2 rounded">

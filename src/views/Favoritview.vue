@@ -11,13 +11,13 @@ onMounted(() => {
 
 <template>
   <div class="p-6">
-    <h1 class="text-3xl font-bold mb-6 text-center">❤️Your Favorites</h1>
+    <h1 class="text-3xl font-bold mb-6 text-center">Your Favorites</h1>
 
     <div
       v-if="store.favorites.length === 0"
       class="text-gray-500 text-center mt-20"
     >
-      No favorites yet 🍽️
+      No favorites yet
     </div>
 
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

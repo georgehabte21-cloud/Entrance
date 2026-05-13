@@ -29,7 +29,6 @@ export const useAuthStore = defineStore("auth", {
 
       this.users.push(form);
 
-      // SAVE to localStorage
       localStorage.setItem("users", JSON.stringify(this.users));
 
       alert("Register Success");
