@@ -7,8 +7,8 @@ const itemStore = useItemStore();
 
 onMounted(async () => {
   try {
-    await categoryStore.fetch();
-    await itemStore.fetch();
+    categoryStore.load();
+    itemStore.load();
   } catch (err) {
     console.log("Fetch error:", err);
   }
@@ -68,17 +68,6 @@ const recentOrders = computed(() => {
     };
   });
 });
-
-const topSelling = computed(() => {
-  return itemStore.items.slice(0, 4).map((item) => {
-    return {
-      id: item.id,
-      name: item.item_name,
-      orders: 50,
-      total: 1000,
-    };
-  });
-});
 </script>
 
 <template>
@@ -117,10 +106,10 @@ const topSelling = computed(() => {
       </div>
     </div>
 
-    <div class="bg-white rounded-3xl shadow-md p-6">
+    <div class="bg-white rounded-3xl shadow-md p-6 mt-3">
       <h2 class="text-2xl font-bold mb-6">Recent Orders</h2>
 
-      <div class="mb-3">
+      <div>
         <div
           v-for="order in recentOrders"
           :key="order.id"

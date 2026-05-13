@@ -66,7 +66,7 @@ const prevPage = () => {
       @delete="store.remove"
     />
 
-    <div class="flex items-center gap-3 mt-6">
+    <div class="flex items-center gap-3 mt-6 flex justify-center">
       <button @click="prevPage" class="bg-gray-500 px-4 py-2 rounded">
         Prev
       </button>
