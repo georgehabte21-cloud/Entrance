@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import api from "../services/api";
 
 export const useItemStore = defineStore("item", {
   state: () => ({
@@ -7,18 +6,28 @@ export const useItemStore = defineStore("item", {
   }),
 
   actions: {
-    async fetch() {
-      const res = await api.get("/items");
-      this.items = res.data;
+    load() {
+      this.items = JSON.parse(localStorage.getItem("items") || "[]");
     },
 
-    async create(data) {
-      await api.post("/items", data);
+    save() {
+      localStorage.setItem("items", JSON.stringify(this.items));
     },
 
-    async remove(id) {
-      await api.delete(`/items/${id}`);
+    add(item) {
+      const newItem = {
+        id: Date.now(),
+        item_name: item.item_name,
+        price: item.price,
+      };
+
+      this.items.push(newItem);
+      this.save();
+    },
+
+    remove(id) {
       this.items = this.items.filter((i) => i.id !== id);
+      this.save();
     },
   },
 });

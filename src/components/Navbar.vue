@@ -1,32 +1,82 @@
-<template>
-  <div class="bg-gray-400 text-violet-900 p-4 min-w-48">
-    <div class="text-center">
-      <router-link
-        to="/dashboard"
-        class="my-2 py-2 block hover:text-gray-700 hover:translate-x-2 duration-300"
-        >Dashboard</router-link
-      >
-      <router-link
-        to="/categories"
-        class="my-2 py-2 block hover:text-gray-700 hover:translate-x-2 duration-300"
-        >Categories</router-link
-      >
-      <router-link
-        to="/items"
-        class="my-2 py-2 block hover:text-gray-700 hover:translate-x-2 duration-300"
-        >Items</router-link
-      >
+<script setup>
+import { ref } from "vue";
 
-      <router-link
-        to="/login"
-        class="my-2 py-2 block hover:text-gray-700 hover:translate-x-2 duration-300"
-        >Login</router-link
-      >
-      <router-link
-        to="/register"
-        class="my-2 py-2 block hover:text-gray-700 hover:translate-x-2 duration-300"
-        >Register</router-link
-      >
+const search = ref("");
+
+const showNotifications = ref(false);
+
+const notifications = ref([
+  "New order received",
+  "Burger item updated",
+  "New user registered",
+]);
+
+const toggleNotifications = () => {
+  showNotifications.value = !showNotifications.value;
+};
+</script>
+
+<template>
+  <nav
+    class="bg-white shadow-md px-6 py-4 flex justify-between items-center border-b"
+  >
+    <div class="flex items-center gap-3">
+      <router-link to="/dashboard">
+        <div
+          class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-2xl hover:cursor-pointer"
+        >
+          D
+        </div>
+      </router-link>
+
+      <div class="mx-2">
+        <h1 class="text-3xl font-bold text-gray-800">Digital Menu</h1>
+      </div>
     </div>
-  </div>
+
+    <div class="flex items-center gap-5 relative">
+      <button @click="toggleNotifications" class="relative">
+        <span class="text-2xl">🔔</span>
+
+        <span
+          class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full"
+        >
+          {{ notifications.length }}
+        </span>
+      </button>
+
+      <div
+        v-if="showNotifications"
+        class="absolute right-0 top-12 w-64 bg-white shadow-lg rounded-lg border p-3 z-50"
+      >
+        <h3 class="font-bold mb-2 text-gray-700">Notifications</h3>
+
+        <div v-if="notifications.length === 0" class="text-gray-400 text-sm">
+          No notifications
+        </div>
+
+        <ul class="space-y-2">
+          <li
+            v-for="(note, index) in notifications"
+            :key="index"
+            class="text-sm bg-gray-100 p-2 rounded"
+          >
+            {{ note }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <img
+          src="/second.png"
+          class="w-10 h-10 rounded-full border object-fill"
+        />
+
+        <div>
+          <h2 class="font-semibold text-gray-700">Tadu</h2>
+          <p class="text-xs text-gray-500">Admin</p>
+        </div>
+      </div>
+    </div>
+  </nav>
 </template>

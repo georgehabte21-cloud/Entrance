@@ -2,7 +2,10 @@
 defineProps({
   modelValue: String,
   placeholder: String,
-  type: { default: "text" },
+  type: {
+    type: String,
+    default: "text",
+  },
 });
 
 defineEmits(["update:modelValue"]);
@@ -10,10 +13,10 @@ defineEmits(["update:modelValue"]);
 
 <template>
   <input
-    :type="type"
-    :placeholder="placeholder"
-    class="border p-2 w-full mb-2 rounded"
     :value="modelValue"
     @input="$emit('update:modelValue', $event.target.value)"
+    :placeholder="placeholder"
+    :type="type"
+    class="border p-2 w-full mb-2 rounded"
   />
 </template>

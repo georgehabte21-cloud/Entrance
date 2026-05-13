@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth";
 
-const router = useRouter(); // 👈 ADD THIS
+const router = useRouter();
 const auth = useAuthStore();
 
 const form = ref({
@@ -18,11 +18,23 @@ const form = ref({
 const error = ref("");
 
 const register = async () => {
+  if (
+    !form.value.name ||
+    !form.value.email ||
+    !form.value.phone ||
+    !form.value.password ||
+    !form.value.business_name ||
+    !form.value.tin
+  ) {
+    alert("Please fill all fields");
+    return;
+  }
+
   try {
     await auth.register(form.value);
     alert("Registered successfully");
 
-    router.push("/login"); // 👈 go to login page
+    router.push("/login");
   } catch (err) {
     error.value = err.message || "Registration failed";
   }

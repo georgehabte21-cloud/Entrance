@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import api from "../services/api";
 
 export const useCategoryStore = defineStore("category", {
   state: () => ({
@@ -7,19 +6,28 @@ export const useCategoryStore = defineStore("category", {
   }),
 
   actions: {
-    async fetch() {
-      const res = await api.get("/categories");
-      this.categories = res.data;
+    load() {
+      this.categories = JSON.parse(localStorage.getItem("categories") || "[]");
     },
 
-    async create(data) {
-      await api.post("/categories", data);
-      this.fetch();
+    save() {
+      localStorage.setItem("categories", JSON.stringify(this.categories));
     },
 
-    async delete(id) {
-      await api.delete(`/categories/${id}`);
-      this.fetch();
+    add(name) {
+      const newCategory = {
+        id: Date.now(),
+        name,
+      };
+
+      this.categories.push(newCategory);
+      this.save();
+    },
+
+    remove(id) {
+      this.categories = this.categories.filter((c) => c.id !== id);
+
+      this.save();
     },
   },
 });

@@ -3,11 +3,11 @@ import { defineStore } from "pinia";
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: null,
-    users: [],
+    users: JSON.parse(localStorage.getItem("users")) || [],
   }),
 
   actions: {
-    async login(form) {
+    login(form) {
       const foundUser = this.users.find(
         (u) => u.email === form.email && u.password === form.password,
       );
@@ -20,7 +20,7 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    async register(form) {
+    register(form) {
       const exists = this.users.find((u) => u.email === form.email);
 
       if (exists) {
@@ -29,6 +29,7 @@ export const useAuthStore = defineStore("auth", {
 
       this.users.push(form);
 
+      // SAVE to localStorage
       localStorage.setItem("users", JSON.stringify(this.users));
 
       alert("Register Success");

@@ -1,11 +1,12 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import Navbar from "../components/Navbar.vue";
 import InputField from "../components/InputField.vue";
 import ItemCard from "../components/ItemCard.vue";
 import { useItemStore } from "../stores/item";
+import { useFavoriteStore } from "../stores/favorites";
 
 const store = useItemStore();
+const favStore = useFavoriteStore();
 
 const search = ref("");
 
@@ -14,49 +15,33 @@ const form = ref({
   price: "",
 });
 
-onMounted(async () => {
-  await store.fetch();
+onMounted(() => {
+  store.load();
 });
 
-const add = async () => {
-  try {
-    await store.create(form.value);
-
-    // reload items after adding
-    await store.fetch();
-
-    // clear form
-    form.value.item_name = "";
-    form.value.price = "";
-
-    alert("Item added successfully ✅");
-  } catch (err) {
-    console.log(err);
-    alert("Failed to add item ❌");
+const add = () => {
+  if (!form.value.item_name.trim() || !form.value.price) {
+    alert("Please fill all fields");
+    return;
   }
+
+  store.add(form.value);
+
+  form.value.item_name = "";
+  form.value.price = "";
 };
 
-// filter items
+const addToFav = (item) => {
+  favStore.add(item);
+  alert("Added to favorites ❤️");
+};
+
+// FILTER
 const filtered = computed(() => {
   return store.items.filter((i) =>
     i.item_name.toLowerCase().includes(search.value.toLowerCase()),
   );
 });
-
-// favorite feature
-const favorite = (item) => {
-  let fav = JSON.parse(localStorage.getItem("fav") || "[]");
-
-  // avoid duplicates
-  const exists = fav.find((f) => f.id === item.id);
-  if (!exists) {
-    fav.push(item);
-  }
-
-  localStorage.setItem("fav", JSON.stringify(fav));
-
-  alert("Added to favorites ❤️");
-};
 </script>
 
 <template>
@@ -79,13 +64,20 @@ const favorite = (item) => {
       </div>
 
       <div class="grid gap-4">
-        <ItemCard
+        <div
           v-for="i in filtered"
           :key="i.id"
-          :item="i"
-          @delete="store.remove"
-          @fav="favorite"
-        />
+          class="bg-white p-4 rounded shadow flex justify-between items-center"
+        >
+          <ItemCard :item="i" @delete="store.remove" />
+
+          <button
+            @click="addToFav(i)"
+            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded mx-3"
+          >
+            ❤️
+          </button>
+        </div>
       </div>
     </div>
   </div>
